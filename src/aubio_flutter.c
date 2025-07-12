@@ -28,18 +28,21 @@ FFI_PLUGIN_EXPORT float aubio_pitch_detect(
         const char* method,
         uint_t samplerate
 ) {
-    if (!input) return 0.0f;
+    if (!input || !input->data) return 0.0f;
 
     uint_t buf_size = input->size;
     uint_t hop_size = buf_size / 2;
 
-    aubio_pitch_t* pitch = new_aubio_pitch(method, buf_size, hop_size, samplerate);
-    fvec_t in_vec = { input->data, buf_size };
-    fvec_t out_vec = { NULL, 1 };
+    fvec_t in_vec;
+    in_vec.length = buf_size;
+    in_vec.data = input->data;
 
+    fvec_t out_vec;
+    out_vec.length = 1;
     float pitch_result = 0.0f;
     out_vec.data = &pitch_result;
 
+    aubio_pitch_t* pitch = new_aubio_pitch(method, buf_size, hop_size, samplerate);
     aubio_pitch_do(pitch, &in_vec, &out_vec);
     del_aubio_pitch(pitch);
 
@@ -48,28 +51,33 @@ FFI_PLUGIN_EXPORT float aubio_pitch_detect(
 
 FFI_PLUGIN_EXPORT void aubio_lowpass_filter(
         SharedAudioBuffer* buffer,
-        smpl_t cutoff_freq,
+        float cutoff_freq,
         uint_t samplerate
 ) {
-    if (!buffer) return;
+    if (!buffer || !buffer->data) return;
+
+    fvec_t vec;
+    vec.length = buffer->size;
+    vec.data = buffer->data;
 
     aubio_filter_t* filter = new_aubio_filter_lowpass(cutoff_freq, samplerate);
-    fvec_t vec = { buffer->data, buffer->size };
-
     aubio_filter_do(filter, &vec);
     del_aubio_filter(filter);
 }
 
+
 FFI_PLUGIN_EXPORT void aubio_highcut_filter(
         SharedAudioBuffer* buffer,
-        smpl_t cutoff_freq,
+        float cutoff_freq,
         uint_t samplerate
 ) {
-    if (!buffer) return;
+    if (!buffer || !buffer->data) return;
+
+    fvec_t vec;
+    vec.length = buffer->size;
+    vec.data = buffer->data;
 
     aubio_filter_t* filter = new_aubio_filter_highpass(cutoff_freq, samplerate);
-    fvec_t vec = { buffer->data, buffer->size };
-
     aubio_filter_do(filter, &vec);
     del_aubio_filter(filter);
 }
@@ -81,12 +89,18 @@ FFI_PLUGIN_EXPORT void aubio_fft_transform(
         uint_t fft_size
 ) {
     if (!input || !real_out || !imag_out) return;
-    if (real_out->size != fft_size/2+1 || imag_out->size != fft_size/2+1) return;
+    if (!input->data || !real_out->data || !imag_out->data) return;
+
+    fvec_t in_vec;
+    in_vec.length = fft_size;
+    in_vec.data = input->data;
+
+    cvec_t spectrum;
+    spectrum.length = fft_size / 2 + 1;
+    spectrum.norm = real_out->data;
+    spectrum.phas = imag_out->data;
 
     aubio_fft_t* fft = new_aubio_fft(fft_size);
-    fvec_t in_vec = { input->data, fft_size };
-    cvec_t spectrum = { real_out->data, imag_out->data, fft_size };
-
     aubio_fft_do(fft, &in_vec, &spectrum);
     del_aubio_fft(fft);
 }

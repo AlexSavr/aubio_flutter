@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
-#include "aubio-c/aubio.h"
+#include "aubio.h"
 
 #define FFI_PLUGIN_EXPORT
 
