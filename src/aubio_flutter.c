@@ -23,28 +23,27 @@ FFI_PLUGIN_EXPORT void aubio_release_shared_buffer(SharedAudioBuffer* buf) {
 // Audio Processing Functions
 // =============================================
 
-FFI_PLUGIN_EXPORT void aubio_pitch_detect(
+FFI_PLUGIN_EXPORT float aubio_pitch_detect(
         SharedAudioBuffer* input,
-        SharedAudioBuffer* output,
         const char* method,
         uint_t samplerate
 ) {
-    if (!input || !output || input->size != output->size) return;
+    if (!input) return 0.0f;
 
     uint_t buf_size = input->size;
     uint_t hop_size = buf_size / 2;
 
     aubio_pitch_t* pitch = new_aubio_pitch(method, buf_size, hop_size, samplerate);
     fvec_t in_vec = { input->data, buf_size };
-    fvec_t out_vec = { output->data, 1 };
+    fvec_t out_vec = { NULL, 1 };
+
+    float pitch_result = 0.0f;
+    out_vec.data = &pitch_result;
 
     aubio_pitch_do(pitch, &in_vec, &out_vec);
-
-    for (uint_t i = 1; i < output->size; i++) {
-        output->data[i] = output->data[0];
-    }
-
     del_aubio_pitch(pitch);
+
+    return pitch_result;
 }
 
 FFI_PLUGIN_EXPORT void aubio_lowpass_filter(

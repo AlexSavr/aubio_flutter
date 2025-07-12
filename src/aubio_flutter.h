@@ -22,22 +22,21 @@ typedef struct {
 FFI_PLUGIN_EXPORT SharedAudioBuffer* aubio_create_shared_buffer(uint32_t size);
 FFI_PLUGIN_EXPORT void aubio_release_shared_buffer(SharedAudioBuffer* buf);
 
-FFI_PLUGIN_EXPORT void aubio_pitch_detect(
+FFI_PLUGIN_EXPORT float aubio_pitch_detect(
         SharedAudioBuffer* input,
-        SharedAudioBuffer* output,
         const char* method,
         uint_t samplerate
 );
 
 FFI_PLUGIN_EXPORT void aubio_lowpass_filter(
         SharedAudioBuffer* buffer,
-        smpl_t cutoff_freq,
+        float cutoff_freq,
         uint_t samplerate
 );
 
 FFI_PLUGIN_EXPORT void aubio_highcut_filter(
         SharedAudioBuffer* buffer,
-        smpl_t cutoff_freq,
+        float cutoff_freq,
         uint_t samplerate
 );
 
