@@ -38,10 +38,9 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.aubio_flutter
-        pluginClass: AubioFlutterPlugin
+        ffiPlugin: true
       ios:
-        pluginClass: AubioFlutterPlugin
+        ffiPlugin: true
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
