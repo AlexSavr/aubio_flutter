@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <string.h>
 #include "aubio.h"
 
 #define FFI_PLUGIN_EXPORT
@@ -25,7 +26,9 @@ FFI_PLUGIN_EXPORT void aubio_release_shared_buffer(SharedAudioBuffer* buf);
 FFI_PLUGIN_EXPORT float aubio_pitch_detect(
         SharedAudioBuffer* input,
         const char* method,
-        uint_t samplerate
+        uint_t samplerate,
+        float silence,
+        float tolerance
 );
 
 FFI_PLUGIN_EXPORT void aubio_fft_transform(

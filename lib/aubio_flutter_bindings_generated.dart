@@ -52,8 +52,10 @@ class AubioFlutterBindings {
     ffi.Pointer<SharedAudioBuffer> input,
     ffi.Pointer<ffi.Char> method,
     int samplerate,
+    double silence,
+    double tolerance,
   ) {
-    return _aubio_pitch_detect(input, method, samplerate);
+    return _aubio_pitch_detect(input, method, samplerate, silence, tolerance);
   }
 
   late final _aubio_pitch_detectPtr =
@@ -63,6 +65,8 @@ class AubioFlutterBindings {
             ffi.Pointer<SharedAudioBuffer>,
             ffi.Pointer<ffi.Char>,
             uint_t,
+            ffi.Float,
+            ffi.Float,
           )
         >
       >('aubio_pitch_detect');
@@ -72,6 +76,8 @@ class AubioFlutterBindings {
           ffi.Pointer<SharedAudioBuffer>,
           ffi.Pointer<ffi.Char>,
           int,
+          double,
+          double,
         )
       >();
 

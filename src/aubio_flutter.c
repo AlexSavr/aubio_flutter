@@ -26,7 +26,9 @@ FFI_PLUGIN_EXPORT void aubio_release_shared_buffer(SharedAudioBuffer* buf) {
 FFI_PLUGIN_EXPORT float aubio_pitch_detect(
         SharedAudioBuffer* input,
         const char* method,
-        uint_t samplerate
+        uint_t samplerate,
+        float silence,
+        float tolerance
 ) {
     if (!input || !input->data) return 0.0f;
 
@@ -43,6 +45,16 @@ FFI_PLUGIN_EXPORT float aubio_pitch_detect(
     out_vec.data = &pitch_result;
 
     aubio_pitch_t* pitch = new_aubio_pitch(method, buf_size, hop_size, samplerate);
+    if (!pitch) {
+        return 0.0f;
+    }
+
+    aubio_pitch_set_silence(pitch, silence);
+
+    if (strcmp(method, "yin") == 0 || strcmp(method, "yinfft") == 0) {
+        aubio_pitch_set_tolerance(pitch, tolerance);
+    }
+
     aubio_pitch_do(pitch, &in_vec, &out_vec);
     del_aubio_pitch(pitch);
 

@@ -32,6 +32,8 @@ Detects the pitch (fundamental frequency) of an audio chunk using various pitch 
 * `samples`: A `Float32List` containing the audio samples.
 * `method`: (_Optional_) The pitch detection algorithm to use. Defaults to `'yin'`. [Methods List](https://aubio.org/doc/latest/pitch_8h.html)
 * `sampleRate`: (_Optional_) The sample rate of the audio signal. Defaults to **44100**.
+* `silence`: (_Optional_) silence threshold of the audio signal. Defaults to **-30.0** db.
+* `tolerance`: (_Optional_) tolerance threshold. Defaults to **0.5**. Min: 0.2 - Max: 0.9
 ### Returns
 * A `double` representing the detected pitch in Hertz (Hz). If no pitch is detected, the value will be **0.0**.
 ### Example Usage
@@ -85,6 +87,8 @@ __________
     * _input_: your samples
     * _method_: pitch detection method. [Methods List](https://aubio.org/doc/latest/pitch_8h.html)
     * _samplerate_: your sample rate of input
+    * _silence_: silence threshold of the pitch detection object
+    * _tolerance_: change _yin_ or _yinfft_ methods tolerance threshold
   
  ⠀
 * ```c++

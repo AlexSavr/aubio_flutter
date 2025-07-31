@@ -36,7 +36,7 @@ class AubioProcessor {
     }
   }
 
-  double processPitchChunk(Float32List samples, {String method = 'yin', int sampleRate = 44100}) {
+  double processPitchChunk(Float32List samples, {String method = 'yin', int sampleRate = 44100, silence = -30.0, tolerance = 0.5}) {
     _initBuffer(samples.length);
     _fillSharedBuffer(_inputBuffer!, samples);
 
@@ -45,6 +45,8 @@ class AubioProcessor {
       _inputBuffer!,
       methodPtr.cast<Char>(),
       sampleRate,
+      silence,
+      tolerance
     );
     calloc.free(methodPtr);
 
