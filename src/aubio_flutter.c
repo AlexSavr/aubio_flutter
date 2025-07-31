@@ -49,39 +49,6 @@ FFI_PLUGIN_EXPORT float aubio_pitch_detect(
     return pitch_result;
 }
 
-FFI_PLUGIN_EXPORT void aubio_lowpass_filter(
-        SharedAudioBuffer* buffer,
-        float cutoff_freq,
-        uint_t samplerate
-) {
-    if (!buffer || !buffer->data) return;
-
-    fvec_t vec;
-    vec.length = buffer->size;
-    vec.data = buffer->data;
-
-    aubio_filter_t* filter = new_aubio_filter_lowpass(cutoff_freq, samplerate);
-    aubio_filter_do(filter, &vec);
-    del_aubio_filter(filter);
-}
-
-
-FFI_PLUGIN_EXPORT void aubio_highcut_filter(
-        SharedAudioBuffer* buffer,
-        float cutoff_freq,
-        uint_t samplerate
-) {
-    if (!buffer || !buffer->data) return;
-
-    fvec_t vec;
-    vec.length = buffer->size;
-    vec.data = buffer->data;
-
-    aubio_filter_t* filter = new_aubio_filter_highpass(cutoff_freq, samplerate);
-    aubio_filter_do(filter, &vec);
-    del_aubio_filter(filter);
-}
-
 FFI_PLUGIN_EXPORT void aubio_fft_transform(
         SharedAudioBuffer* input,
         SharedAudioBuffer* real_out,

@@ -48,20 +48,18 @@ class AubioFlutterBindings {
   late final _aubio_release_shared_buffer = _aubio_release_shared_bufferPtr
       .asFunction<void Function(ffi.Pointer<SharedAudioBuffer>)>();
 
-  void aubio_pitch_detect(
+  double aubio_pitch_detect(
     ffi.Pointer<SharedAudioBuffer> input,
-    ffi.Pointer<SharedAudioBuffer> output,
     ffi.Pointer<ffi.Char> method,
     int samplerate,
   ) {
-    return _aubio_pitch_detect(input, output, method, samplerate);
+    return _aubio_pitch_detect(input, method, samplerate);
   }
 
   late final _aubio_pitch_detectPtr =
       _lookup<
         ffi.NativeFunction<
-          ffi.Void Function(
-            ffi.Pointer<SharedAudioBuffer>,
+          ffi.Float Function(
             ffi.Pointer<SharedAudioBuffer>,
             ffi.Pointer<ffi.Char>,
             uint_t,
@@ -70,47 +68,12 @@ class AubioFlutterBindings {
       >('aubio_pitch_detect');
   late final _aubio_pitch_detect = _aubio_pitch_detectPtr
       .asFunction<
-        void Function(
-          ffi.Pointer<SharedAudioBuffer>,
+        double Function(
           ffi.Pointer<SharedAudioBuffer>,
           ffi.Pointer<ffi.Char>,
           int,
         )
       >();
-
-  void aubio_lowpass_filter(
-    ffi.Pointer<SharedAudioBuffer> buffer,
-    double cutoff_freq,
-    int samplerate,
-  ) {
-    return _aubio_lowpass_filter(buffer, cutoff_freq, samplerate);
-  }
-
-  late final _aubio_lowpass_filterPtr =
-      _lookup<
-        ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<SharedAudioBuffer>, smpl_t, uint_t)
-        >
-      >('aubio_lowpass_filter');
-  late final _aubio_lowpass_filter = _aubio_lowpass_filterPtr
-      .asFunction<void Function(ffi.Pointer<SharedAudioBuffer>, double, int)>();
-
-  void aubio_highcut_filter(
-    ffi.Pointer<SharedAudioBuffer> buffer,
-    double cutoff_freq,
-    int samplerate,
-  ) {
-    return _aubio_highcut_filter(buffer, cutoff_freq, samplerate);
-  }
-
-  late final _aubio_highcut_filterPtr =
-      _lookup<
-        ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<SharedAudioBuffer>, smpl_t, uint_t)
-        >
-      >('aubio_highcut_filter');
-  late final _aubio_highcut_filter = _aubio_highcut_filterPtr
-      .asFunction<void Function(ffi.Pointer<SharedAudioBuffer>, double, int)>();
 
   void aubio_fft_transform(
     ffi.Pointer<SharedAudioBuffer> input,
@@ -153,5 +116,3 @@ final class SharedAudioBuffer extends ffi.Struct {
 /// unsigned integer
 typedef uint_t = ffi.UnsignedInt;
 typedef Dartuint_t = int;
-typedef smpl_t = ffi.Float;
-typedef Dartsmpl_t = double;

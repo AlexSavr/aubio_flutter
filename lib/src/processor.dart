@@ -13,83 +13,67 @@ class FFTResult {
 
 class AubioProcessor {
   static final _bindings = AubioFlutterBindings(_loadLibrary());
+  Pointer<SharedAudioBuffer>? _inputBuffer;
 
   static DynamicLibrary _loadLibrary() {
     const String libName = 'aubio_flutter';
-
-    if (Platform.isMacOS || Platform.isIOS) {
+    if (Platform.isAndroid) {
+      return DynamicLibrary.open('lib$libName.so');
+    } else if (Platform.isIOS) {
       return DynamicLibrary.open('$libName.framework/$libName');
     }
-    if (Platform.isAndroid || Platform.isLinux) {
-      return DynamicLibrary.open('lib$libName.so');
-    }
-    if (Platform.isWindows) {
-      return DynamicLibrary.open('$libName.dll');
-    }
-    throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
+    throw UnsupportedError('Platform not supported');
   }
 
-  Float32List pitchDetection(
-      Float32List inputSamples, {
-        String method = 'yin',
-        double? lowpassCutoff,
-        double? highpassCutoff,
-        int sampleRate = 44100,
-      }) {
-    final inputBuffer = _bindings.aubio_create_shared_buffer(inputSamples.length);
-    final outputBuffer = _bindings.aubio_create_shared_buffer(inputSamples.length);
+  void _initBuffer(int size) {
+    _inputBuffer ??= _bindings.aubio_create_shared_buffer(size);
+  }
 
-    try {
-      _fillSharedBuffer(inputBuffer, inputSamples);
-
-      final methodPtr = method.toNativeUtf8().cast<Char>();
-      _bindings.aubio_pitch_detect(
-        inputBuffer,
-        outputBuffer,
-        methodPtr,
-        sampleRate,
-      );
-      calloc.free(methodPtr.cast<Utf8>());
-
-      if (lowpassCutoff != null) {
-        _bindings.aubio_lowpass_filter(inputBuffer, lowpassCutoff, sampleRate);
-      }
-
-      if (highpassCutoff != null) {
-        _bindings.aubio_highcut_filter(inputBuffer, highpassCutoff, sampleRate);
-      }
-
-      return _readSharedBuffer(inputBuffer);
-    } finally {
-      _bindings.aubio_release_shared_buffer(inputBuffer);
-      _bindings.aubio_release_shared_buffer(outputBuffer);
+  void dispose() {
+    if (_inputBuffer != null) {
+      _bindings.aubio_release_shared_buffer(_inputBuffer!);
+      _inputBuffer = null;
     }
   }
 
-  FFTResult processFFT(Float32List inputSamples, int fftSize) {
-    final inputBuffer = _bindings.aubio_create_shared_buffer(inputSamples.length);
+  double processPitchChunk(Float32List samples, {String method = 'yin', int sampleRate = 44100}) {
+    _initBuffer(samples.length);
+    _fillSharedBuffer(_inputBuffer!, samples);
+
+    final methodPtr = method.toNativeUtf8();
+    final result = _bindings.aubio_pitch_detect(
+      _inputBuffer!,
+      methodPtr.cast<Char>(),
+      sampleRate,
+    );
+    calloc.free(methodPtr);
+
+    return result;
+  }
+
+  FFTResult processFFTChunk(Float32List samples, int fftSize) {
+    _initBuffer(samples.length);
     final realBuffer = _bindings.aubio_create_shared_buffer(fftSize ~/ 2 + 1);
     final imagBuffer = _bindings.aubio_create_shared_buffer(fftSize ~/ 2 + 1);
 
-    try {
-      _fillSharedBuffer(inputBuffer, inputSamples);
+    _fillSharedBuffer(_inputBuffer!, samples);
 
-      _bindings.aubio_fft_transform(
-        inputBuffer,
-        realBuffer,
-        imagBuffer,
-        fftSize,
-      );
+    _bindings.aubio_fft_transform(
+      _inputBuffer!,
+      realBuffer,
+      imagBuffer,
+      fftSize,
+    );
 
-      return FFTResult(
-        real: _readSharedBuffer(realBuffer),
-        imaginary: _readSharedBuffer(imagBuffer),
-      );
-    } finally {
-      _bindings.aubio_release_shared_buffer(inputBuffer);
-      _bindings.aubio_release_shared_buffer(realBuffer);
-      _bindings.aubio_release_shared_buffer(imagBuffer);
-    }
+    final result = FFTResult(
+      real: _readSharedBuffer(realBuffer),
+      imaginary: _readSharedBuffer(imagBuffer),
+    );
+
+    _bindings.aubio_release_shared_buffer(realBuffer);
+    _bindings.aubio_release_shared_buffer(imagBuffer);
+
+    return result;
   }
 
   void _fillSharedBuffer(Pointer<SharedAudioBuffer> buffer, Float32List samples) {
@@ -107,8 +91,4 @@ class AubioProcessor {
     }
     return result;
   }
-}
-
-AubioFlutterBindings initAubioBindings() {
-  return AubioFlutterBindings(AubioProcessor._loadLibrary());
 }

@@ -28,18 +28,6 @@ FFI_PLUGIN_EXPORT float aubio_pitch_detect(
         uint_t samplerate
 );
 
-FFI_PLUGIN_EXPORT void aubio_lowpass_filter(
-        SharedAudioBuffer* buffer,
-        float cutoff_freq,
-        uint_t samplerate
-);
-
-FFI_PLUGIN_EXPORT void aubio_highcut_filter(
-        SharedAudioBuffer* buffer,
-        float cutoff_freq,
-        uint_t samplerate
-);
-
 FFI_PLUGIN_EXPORT void aubio_fft_transform(
         SharedAudioBuffer* input,
         SharedAudioBuffer* real_out,

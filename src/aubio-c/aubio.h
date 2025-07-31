@@ -201,6 +201,31 @@ extern "C"
 #include "utils/parameter.h"
 #include "utils/log.h"
 
+#if AUBIO_UNSTABLE
+#include "mathutils.h"
+#include "io/source_sndfile.h"
+#include "io/source_apple_audio.h"
+#include "io/source_avcodec.h"
+#include "io/source_wavread.h"
+#include "io/sink_sndfile.h"
+#include "io/sink_apple_audio.h"
+#include "io/sink_wavwrite.h"
+#include "io/audio_unit.h"
+#include "onset/peakpicker.h"
+#include "pitch/pitchmcomb.h"
+#include "pitch/pitchyin.h"
+#include "pitch/pitchyinfft.h"
+#include "pitch/pitchyinfast.h"
+#include "pitch/pitchschmitt.h"
+#include "pitch/pitchfcomb.h"
+#include "pitch/pitchspecacf.h"
+#include "tempo/beattracking.h"
+#include "effects/pitchshift.h"
+#include "effects/timestretch.h"
+#include "utils/scale.h"
+#include "utils/hist.h"
+#endif
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

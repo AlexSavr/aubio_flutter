@@ -41,6 +41,10 @@ flutter:
         ffiPlugin: true
       ios:
         ffiPlugin: true
+      files:
+        - src/aubio-c/**
+        - src/aubio_flutter.c
+        - src/aubio_flutter.h
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
