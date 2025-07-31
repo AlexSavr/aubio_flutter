@@ -83,3 +83,51 @@ FFI_PLUGIN_EXPORT void aubio_fft_transform(
     aubio_fft_do(fft, &in_vec, &spectrum);
     del_aubio_fft(fft);
 }
+
+// =============================================
+// Musical Conversion Functions
+// =============================================
+
+FFI_PLUGIN_EXPORT float aubio_freq_to_midi(float freq) {
+    return aubio_freqtomidi(freq);
+}
+
+FFI_PLUGIN_EXPORT float aubio_midi_to_freq(float midi) {
+    return aubio_miditofreq(midi);
+}
+
+FFI_PLUGIN_EXPORT float aubio_freq_to_midi_tuned(float freq, float base_freq) {
+    return 69.0f + 12.0f * log2f(freq / base_freq);
+}
+
+FFI_PLUGIN_EXPORT float aubio_midi_to_freq_tuned(float midi, float base_freq) {
+    if(!base_freq) {
+        base_freq = 440.0;
+    }
+    return base_freq * powf(2.0f, (midi - 69.0f) / 12.0f);
+}
+
+FFI_PLUGIN_EXPORT float aubio_freq_to_cents(float freq, float ref_freq) {
+    if (freq <= 0 || ref_freq <= 0) return 0;
+    return 1200.0f * log2f(freq / ref_freq);
+}
+
+FFI_PLUGIN_EXPORT const char* aubio_midi_to_note_name(float midi, bool is_flat_names) {
+    static const char* sharp_names[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+    static const char* flat_names[] = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
+
+    int midi_note = (int)roundf(midi);
+    if (midi_note < 0 || midi_note > 127) {
+        return "NaN";
+    }
+
+    int octave = (midi_note / 12) - 1;
+    int note_index = midi_note % 12;
+
+    const char** names = is_flat_names ? flat_names : sharp_names;
+
+    static char result[8];
+    snprintf(result, sizeof(result), "%s%d", names[note_index], octave);
+
+    return result;
+}
