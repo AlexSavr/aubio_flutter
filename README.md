@@ -16,7 +16,9 @@ Structure:
 Add the `aubio_flutter` package to your `pubspec.yaml` file:
 ```yaml
 dependencies:
-  aubio_flutter: ^0.0.2
+  aubio_flutter:
+    git:
+      url: https://github.com/AlexSavr/aubio_flutter.git
 ```
 Then run `flutter pub get` to install the package.
 
