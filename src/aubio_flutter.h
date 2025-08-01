@@ -6,6 +6,7 @@
 #include <string.h>
 #include "aubio.h"
 #include <math.h>
+#include <stdbool.h>
 
 #define FFI_PLUGIN_EXPORT
 
@@ -40,7 +41,6 @@ FFI_PLUGIN_EXPORT void aubio_fft_transform(
 );
 
 FFI_PLUGIN_EXPORT float aubio_freq_to_midi(float freq);
-FFI_PLUGIN_EXPORT const char* aubio_midi_to_note_name(float midi, bool is_flat_names);
 FFI_PLUGIN_EXPORT float aubio_midi_to_freq(float midi);
 FFI_PLUGIN_EXPORT float aubio_freq_to_cents(float freq, float ref_freq);
 FFI_PLUGIN_EXPORT float aubio_midi_to_freq_tuned(float midi, float base_freq);

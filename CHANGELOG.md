@@ -19,3 +19,7 @@
 * added `aubio_freq_to_midi_tuned`, to get from base tune (eg. 440hz)
 * added `aubio_midi_to_freq_tuned`, to get from base tune (eg. 440hz)
 * added `aubio_freq_to_cents`, comparing two values and return cents (diff between the two values)
+* added DartDoc for processor.dart 
+* added `findDominantFrequency`, finds the dominant freq from FFT results
+* added `midiToNoteName`, converts a MIDI note number to a musical note name
+* added in **example**: note, midi, cents by record

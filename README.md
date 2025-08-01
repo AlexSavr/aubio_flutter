@@ -74,6 +74,146 @@ FFTResult fft = processor.processFFTChunk(samples, fftSize: 1024);
 print('Real Part: ${fft.real}');
 print('Imaginary Part: ${fft.imaginary}');
 ```
+
+### 3. `freqToMidiTuned`
+
+### Description
+Converts a frequency to a MIDI note number with custom tuning.
+
+### Parameters
+*   `freq`: The frequency (Hz) to convert.
+*   `baseFreq`: The base frequency (Hz) for tuning (e.g., 440 for A4).
+
+### Returns
+The MIDI note number (e.g., 69 for A4 at 440 Hz).
+
+### Example Usage
+```dart
+    final processor = AubioProcessor();
+    double midiNote = processor.freqToMidiTuned(450.0, 440.0);
+    print('MIDI Note: $midiNote'); // Output will be ~69.2 for 450Hz with A440 tuning
+```
+
+### 4. `midiToFreqTuned`
+
+### Description
+Converts a MIDI note number to a frequency with custom tuning.
+
+### Parameters
+*   `midi`: The MIDI note number (e.g., 69 for A4).
+*   `baseFreq`: The base frequency (Hz) for tuning (e.g., 440 for A4).
+
+### Returns
+The frequency (Hz) of the note.
+
+### Example Usage
+```dart
+    final processor = AubioProcessor();
+    double frequency = processor.midiToFreqTuned(69.5, 432.0);
+    print('Frequency: $frequency Hz'); // Output will be ~436.5 Hz for note 69.5 with A432 tuning
+```
+
+### 5. `freqToCents`
+
+### Description
+Converts a frequency to cents relative to a reference frequency.
+
+### Parameters
+*   `freq`: The input frequency (Hz).
+*   `refFreq`: The reference frequency (Hz).
+
+### Returns
+The difference in cents (e.g., 0 if frequencies match).
+
+### Example Usage
+```dart
+    final processor = AubioProcessor();
+    double centsDiff = processor.freqToCents(445.0, 440.0);
+    print('Cents difference: $centsDiff'); // Output will be ~19.6 cents
+```
+
+### 6. `midiToFreq`
+
+### Description
+Converts a MIDI note number to frequency (standard A440 tuning).
+
+### Parameters
+*   `midi`: The MIDI note number (e.g., 69 for A4).
+
+### Returns
+The frequency (Hz) of the note.
+
+### Example Usage
+```dart
+    final processor = AubioProcessor();
+    double frequency = processor.midiToFreq(60);
+    print('Frequency: $frequency Hz'); // Output will be 261.63 Hz (middle C)
+```
+
+### 7. `midiToNoteName`
+
+### Description
+Converts a MIDI note number to a musical note name.
+
+### Parameters
+*   `midi`: The MIDI note number (e.g., 69 for A4).
+*   `isFlatNames`: If \`true\`, uses flat names (e.g., "Bb4"); otherwise uses sharps (e.g., "A#4").
+
+### Returns
+The note name as a string (e.g., "A4").
+
+### Example Usage
+```dart
+    final processor = AubioProcessor();
+    String sharpName = processor.midiToNoteName(61);
+    String flatName = processor.midiToNoteName(61, isFlatNames: true);
+    print('Sharp name: $sharpName'); // Output: "C#4"
+    print('Flat name: $flatName');   // Output: "Db4"
+```
+
+### 8. `freqToMidi`
+
+### Description
+Converts a frequency to a MIDI note number (standard A440 tuning).
+
+### Parameters
+*   `freq`: The frequency (Hz) to convert.
+
+### Returns
+The MIDI note number (e.g., 69 for 440 Hz).
+
+### Example Usage
+```dart
+    final processor = AubioProcessor();
+    double midiNote = processor.freqToMidi(880.0);
+    print('MIDI Note: $midiNote'); // Output will be 81 (A5)
+```
+
+### 9. `findDominantFrequency`
+
+### Description
+Finds the dominant frequency from FFT results.
+
+### Parameters
+*   `fft`: FFT result containing real and imaginary parts.
+*   `sampleRate`: Audio sample rate in Hz.
+*   `fftSize`: Size of the FFT window used.
+
+### Returns
+Dominant frequency in Hz.
+
+### Example Usage
+```dart
+    final processor = AubioProcessor();
+    final samples = Float32List.fromList([/* audio samples here */]);
+    
+    // First get FFT results
+    FFTResult fft = processor.processFFTChunk(samples, fftSize: 1024);
+    
+    // Then find dominant frequency
+    double dominantFreq = processor.findDominantFrequency(fft, 44100, 1024);
+    print('Dominant frequency: $dominantFreq Hz');
+```
  ⠀
  ⠀
 __________

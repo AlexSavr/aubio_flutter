@@ -36,7 +36,11 @@ class _AudioProcessingScreenState extends State<AudioProcessingScreen> {
   bool isRecording = false;
   String pitchResult = "Not detected";
   String fftResult = "No data";
+  String noteResult = "No note";
+  String midiResult = "No MIDI";
+  String centsResult = "No cents";
   List<double> audioSamples = [];
+  double baseFrequency = 440.0;
 
   @override
   void initState() {
@@ -102,33 +106,26 @@ class _AudioProcessingScreenState extends State<AudioProcessingScreen> {
     final pitchValue = aubioProcessor.processPitchChunk(
       float32Buffer,
       method: 'yin',
-      sampleRate: 44100,
+      sampleRate: 16000,
     );
 
     final fftSize = 1024;
     final fft = aubioProcessor.processFFTChunk(float32Buffer, fftSize);
-    final dominantFreq = _findDominantFrequency(fft, 44100, fftSize);
+    final dominantFreq = aubioProcessor.findDominantFrequency(fft, 44100, fftSize);
+
+    // Additional musical analysis
+    final midiNote = aubioProcessor.freqToMidi(pitchValue);
+    final noteName = aubioProcessor.midiToNoteName(midiNote);
+    final cents = aubioProcessor.freqToCents(pitchValue, baseFrequency);
 
     setState(() {
       pitchResult = "Pitch: ${pitchValue.toStringAsFixed(2)} Hz";
       fftResult = "FFT Dominant: ${dominantFreq.toStringAsFixed(2)} Hz";
+      noteResult = "Note: $noteName";
+      midiResult = "MIDI: ${midiNote.toStringAsFixed(2)}";
+      centsResult = "Cents from A4: ${cents.toStringAsFixed(2)}";
       audioSamples.addAll(samples);
     });
-  }
-
-  double _findDominantFrequency(FFTResult fft, int sampleRate, int fftSize) {
-    double maxMagnitude = 0;
-    int maxIndex = 0;
-
-    for (int i = 0; i < fft.real.length; i++) {
-      final magnitude = sqrt(pow(fft.real[i], 2) + pow(fft.imaginary[i], 2));
-      if (magnitude > maxMagnitude) {
-        maxMagnitude = magnitude;
-        maxIndex = i;
-      }
-    }
-
-    return maxIndex * sampleRate / fftSize;
   }
 
   @override
@@ -160,39 +157,15 @@ class _AudioProcessingScreenState extends State<AudioProcessingScreen> {
             Text(pitchResult, style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 10),
             Text(fftResult, style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 8),
+            Text(noteResult, style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 8),
+            Text(midiResult, style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 8),
+            Text(centsResult, style: const TextStyle(fontSize: 18)),
           ],
         ),
       ),
     );
   }
-}
-
-class AudioWaveformPainter extends CustomPainter {
-  final List<double> samples;
-
-  AudioWaveformPainter(this.samples);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.blue
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke;
-
-    final path = Path();
-    final dx = size.width / samples.length;
-
-    path.moveTo(0, size.height / 2);
-
-    for (int i = 0; i < samples.length; i++) {
-      final x = i * dx;
-      final y = size.height / 2 - samples[i] * size.height / 2;
-      path.lineTo(x, y);
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

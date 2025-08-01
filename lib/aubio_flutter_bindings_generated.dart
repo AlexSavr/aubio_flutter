@@ -110,6 +110,61 @@ class AubioFlutterBindings {
           int,
         )
       >();
+
+  double aubio_freq_to_midi(double freq) {
+    return _aubio_freq_to_midi(freq);
+  }
+
+  late final _aubio_freq_to_midiPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(ffi.Float)>>(
+        'aubio_freq_to_midi',
+      );
+  late final _aubio_freq_to_midi = _aubio_freq_to_midiPtr
+      .asFunction<double Function(double)>();
+
+  double aubio_midi_to_freq(double midi) {
+    return _aubio_midi_to_freq(midi);
+  }
+
+  late final _aubio_midi_to_freqPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(ffi.Float)>>(
+        'aubio_midi_to_freq',
+      );
+  late final _aubio_midi_to_freq = _aubio_midi_to_freqPtr
+      .asFunction<double Function(double)>();
+
+  double aubio_freq_to_cents(double freq, double ref_freq) {
+    return _aubio_freq_to_cents(freq, ref_freq);
+  }
+
+  late final _aubio_freq_to_centsPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(ffi.Float, ffi.Float)>>(
+        'aubio_freq_to_cents',
+      );
+  late final _aubio_freq_to_cents = _aubio_freq_to_centsPtr
+      .asFunction<double Function(double, double)>();
+
+  double aubio_midi_to_freq_tuned(double midi, double base_freq) {
+    return _aubio_midi_to_freq_tuned(midi, base_freq);
+  }
+
+  late final _aubio_midi_to_freq_tunedPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(ffi.Float, ffi.Float)>>(
+        'aubio_midi_to_freq_tuned',
+      );
+  late final _aubio_midi_to_freq_tuned = _aubio_midi_to_freq_tunedPtr
+      .asFunction<double Function(double, double)>();
+
+  double aubio_freq_to_midi_tuned(double freq, double base_freq) {
+    return _aubio_freq_to_midi_tuned(freq, base_freq);
+  }
+
+  late final _aubio_freq_to_midi_tunedPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(ffi.Float, ffi.Float)>>(
+        'aubio_freq_to_midi_tuned',
+      );
+  late final _aubio_freq_to_midi_tuned = _aubio_freq_to_midi_tunedPtr
+      .asFunction<double Function(double, double)>();
 }
 
 final class SharedAudioBuffer extends ffi.Struct {
