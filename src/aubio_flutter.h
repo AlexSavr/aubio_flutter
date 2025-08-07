@@ -30,7 +30,9 @@ FFI_PLUGIN_EXPORT float aubio_pitch_detect(
         const char* method,
         uint_t samplerate,
         float silence,
-        float tolerance
+        float tolerance,
+        float highpass_cutoff,
+        float lowpass_cutoff
 );
 
 FFI_PLUGIN_EXPORT void aubio_fft_transform(
@@ -45,6 +47,13 @@ FFI_PLUGIN_EXPORT float aubio_midi_to_freq(float midi);
 FFI_PLUGIN_EXPORT float aubio_freq_to_cents(float freq, float ref_freq);
 FFI_PLUGIN_EXPORT float aubio_midi_to_freq_tuned(float midi, float base_freq);
 FFI_PLUGIN_EXPORT float aubio_freq_to_midi_tuned(float freq, float base_freq);
+
+FFI_PLUGIN_EXPORT void aubio_high_pass_filter(
+        SharedAudioBuffer* input,
+        SharedAudioBuffer* output,
+        uint_t samplerate,
+        float cutoff_freq
+);
 
 #ifdef __cplusplus
 }

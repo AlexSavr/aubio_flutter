@@ -56,7 +56,9 @@ class AubioProcessor {
         methodPtr.cast<Char>(),
         sampleRate,
         silence,
-        tolerance
+        tolerance,
+        0,
+        0,
     );
     calloc.free(methodPtr);
 
@@ -200,5 +202,37 @@ class AubioProcessor {
     }
 
     return maxIndex * sampleRate / fftSize;
+  }
+
+  /// Applies a high-pass filter to the audio signal.
+  ///
+  /// This filter attenuates frequencies below the cutoff frequency while
+  /// allowing higher frequencies to pass through.
+  ///
+  /// - [samples]: Input audio samples as `Float32List`.
+  /// - [sampleRate]: The sample rate of the audio signal in Hz.
+  /// - [cutoffFreq]: The cutoff frequency in Hz (frequencies below this will be attenuated).
+  /// - Returns: A new `Float32List` containing the filtered audio samples.
+  Float32List applyHighPassFilter(
+      Float32List samples,
+      int sampleRate,
+      double cutoffFreq,
+      ) {
+    _initBuffer(samples.length);
+    final outputBuffer = _bindings.aubio_create_shared_buffer(samples.length);
+
+    _fillSharedBuffer(_inputBuffer!, samples);
+
+    _bindings.aubio_high_pass_filter(
+      _inputBuffer!,
+      outputBuffer,
+      sampleRate,
+      cutoffFreq,
+    );
+
+    final result = _readSharedBuffer(outputBuffer);
+    _bindings.aubio_release_shared_buffer(outputBuffer);
+
+    return result;
   }
 }

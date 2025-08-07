@@ -54,8 +54,18 @@ class AubioFlutterBindings {
     int samplerate,
     double silence,
     double tolerance,
+    double highpass_cutoff,
+    double lowpass_cutoff,
   ) {
-    return _aubio_pitch_detect(input, method, samplerate, silence, tolerance);
+    return _aubio_pitch_detect(
+      input,
+      method,
+      samplerate,
+      silence,
+      tolerance,
+      highpass_cutoff,
+      lowpass_cutoff,
+    );
   }
 
   late final _aubio_pitch_detectPtr =
@@ -67,6 +77,8 @@ class AubioFlutterBindings {
             uint_t,
             ffi.Float,
             ffi.Float,
+            ffi.Float,
+            ffi.Float,
           )
         >
       >('aubio_pitch_detect');
@@ -76,6 +88,8 @@ class AubioFlutterBindings {
           ffi.Pointer<SharedAudioBuffer>,
           ffi.Pointer<ffi.Char>,
           int,
+          double,
+          double,
           double,
           double,
         )
@@ -165,6 +179,66 @@ class AubioFlutterBindings {
       );
   late final _aubio_freq_to_midi_tuned = _aubio_freq_to_midi_tunedPtr
       .asFunction<double Function(double, double)>();
+
+  void aubio_high_cut_filter(
+    ffi.Pointer<SharedAudioBuffer> input,
+    ffi.Pointer<SharedAudioBuffer> output,
+    int samplerate,
+    double cutoff_freq,
+  ) {
+    return _aubio_high_cut_filter(input, output, samplerate, cutoff_freq);
+  }
+
+  late final _aubio_high_cut_filterPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(
+            ffi.Pointer<SharedAudioBuffer>,
+            ffi.Pointer<SharedAudioBuffer>,
+            uint_t,
+            ffi.Float,
+          )
+        >
+      >('aubio_high_cut_filter');
+  late final _aubio_high_cut_filter = _aubio_high_cut_filterPtr
+      .asFunction<
+        void Function(
+          ffi.Pointer<SharedAudioBuffer>,
+          ffi.Pointer<SharedAudioBuffer>,
+          int,
+          double,
+        )
+      >();
+
+  void aubio_high_pass_filter(
+    ffi.Pointer<SharedAudioBuffer> input,
+    ffi.Pointer<SharedAudioBuffer> output,
+    int samplerate,
+    double cutoff_freq,
+  ) {
+    return _aubio_high_pass_filter(input, output, samplerate, cutoff_freq);
+  }
+
+  late final _aubio_high_pass_filterPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(
+            ffi.Pointer<SharedAudioBuffer>,
+            ffi.Pointer<SharedAudioBuffer>,
+            uint_t,
+            ffi.Float,
+          )
+        >
+      >('aubio_high_pass_filter');
+  late final _aubio_high_pass_filter = _aubio_high_pass_filterPtr
+      .asFunction<
+        void Function(
+          ffi.Pointer<SharedAudioBuffer>,
+          ffi.Pointer<SharedAudioBuffer>,
+          int,
+          double,
+        )
+      >();
 }
 
 final class SharedAudioBuffer extends ffi.Struct {
