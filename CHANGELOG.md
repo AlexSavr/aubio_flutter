@@ -23,3 +23,8 @@
 * added `findDominantFrequency`, finds the dominant freq from FFT results
 * added `midiToNoteName`, converts a MIDI note number to a musical note name
 * added in **example**: note, midi, cents by record
+
+## 0.0.5
+* added `handlePitch`, converts a pitch frequency into a MIDI note number, its note name, reference frequency, and the difference in Hertz and cents relative to the calibration frequency.
+* fix paths in `CMakeLists`
+* fix `aubio_freq_to_midi_tuned` and `aubio_midi_to_freq_tuned`: now used `aubio` util

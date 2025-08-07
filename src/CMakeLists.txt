@@ -3,7 +3,7 @@
 # the plugin to fail to compile for some customers of the plugin.
 cmake_minimum_required(VERSION 3.10)
 
-project(aubio_flutter_library VERSION 0.0.1 LANGUAGES C)
+project(aubio_flutter_library VERSION 0.0.5 LANGUAGES C)
 
 add_library(aubio STATIC
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/aubio.h
