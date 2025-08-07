@@ -5,6 +5,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import '../aubio_flutter_bindings_generated.dart';
+import 'pitch_result.dart';
 
 class FFTResult {
   final Float32List real;
@@ -160,8 +161,14 @@ class AubioProcessor {
   String midiToNoteName(double midi, {bool isFlatNames = false}) {
     const sharpNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
     const flatNames = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+    int midiNote;
 
-    final midiNote = midi.round();
+    try {
+      midiNote = midi.round();
+    } catch(e) {
+      return "NaN";
+    }
+
     if (midiNote < 0 || midiNote > 127) {
       return "NaN";
     }
@@ -201,4 +208,36 @@ class AubioProcessor {
 
     return maxIndex * sampleRate / fftSize;
   }
+
+  double diffFromTargetedNote(double pitch, { double calibration = 440.0 }) {
+    final midiNoteNumber = freqToMidiTuned(pitch, calibration);
+    final targetPitch = midiToFreqTuned(midiNoteNumber, calibration);
+    return targetPitch - pitch;
+  }
+
+  /// Converts a frequency (pitch) into musical note information including:
+  /// - Note name (e.g., "A4")
+  /// - MIDI note number
+  /// - Reference frequency (based on calibration)
+  /// - Frequency difference from reference (in Hz and cents)
+  ///
+  /// - [pitch]: Input frequency in Hz to analyze
+  /// - [calibration]: Reference tuning frequency (default A4 = 440.0 Hz)
+  /// - Returns: [PitchResult] containing all converted note information
+  handlePitch(double pitch, { double calibration = 440.0 }) {
+    final midiNoteNumber = freqToMidiTuned(pitch, calibration);
+    final noteLiteral = midiToNoteName(midiNoteNumber);
+    final refFreq = midiToFreqTuned(midiNoteNumber.roundToDouble(), calibration);
+    final diff = refFreq - pitch;
+    final diffCents = freqToCents(pitch, refFreq);
+
+    return PitchResult(
+      noteLiteral,
+      midiNoteNumber.toInt(),
+      refFreq,
+      diff,
+      diffCents
+    );
+  }
 }
+

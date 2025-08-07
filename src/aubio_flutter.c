@@ -98,14 +98,20 @@ FFI_PLUGIN_EXPORT float aubio_midi_to_freq(float midi) {
 }
 
 FFI_PLUGIN_EXPORT float aubio_freq_to_midi_tuned(float freq, float base_freq) {
-    return 69.0f + 12.0f * log2f(freq / base_freq);
-}
-
-FFI_PLUGIN_EXPORT float aubio_midi_to_freq_tuned(float midi, float base_freq) {
     if(!base_freq) {
         base_freq = 440.0;
     }
-    return base_freq * powf(2.0f, (midi - 69.0f) / 12.0f);
+    float freq_corrected = freq + (440.0 - base_freq);
+    return aubio_freqtomidi(freq_corrected);
+}
+
+FFI_PLUGIN_EXPORT float aubio_midi_to_freq_tuned(float midi, float base_freq) {
+    if (!base_freq) {
+        base_freq = 440.0;
+    }
+    float freq_at_440 = aubio_miditofreq(midi);
+    float freq_corrected = freq_at_440 * (base_freq / 440.0);
+    return freq_corrected;
 }
 
 FFI_PLUGIN_EXPORT float aubio_freq_to_cents(float freq, float ref_freq) {

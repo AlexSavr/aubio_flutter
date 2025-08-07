@@ -215,6 +215,32 @@ Dominant frequency in Hz.
     print('Dominant frequency: $dominantFreq Hz');
 ```
  ⠀
+### 10. `handlePitch`
+
+### Description
+Converts a frequency into musical note information including note name, MIDI number, reference frequency, and tuning deviation in Hz/cents.
+
+### Parameters
+*   **pitch**: Input frequency in Hz to analyze
+*   **calibration**: Reference tuning frequency (default A4 = 440.0 Hz)
+
+### Returns
+`PitchResult` object containing:
+*   noteLiteral (e.g. "A4")
+*   midiNoteNumber
+*   referenceFrequency
+*   frequencyDifference (Hz)
+*   deviationCents
+
+### Example usage
+```dart
+// Check tuning of 442 Hz against standard A440
+final pitchAnalysis = handlePitch(442.0);
+
+print('Note: ${pitchAnalysis.noteLiteral}'); // "A4"
+print('Deviation: ${pitchAnalysis.diffCents.toStringAsFixed(2)} cents'); // "7.85 cents"
+print('Reference freq: ${pitchAnalysis.refFreq.toStringAsFixed(2)} Hz'); // "440.00 Hz"
+```
  ⠀
 __________
 

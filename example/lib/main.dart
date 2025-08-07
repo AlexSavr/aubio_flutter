@@ -111,19 +111,17 @@ class _AudioProcessingScreenState extends State<AudioProcessingScreen> {
 
     final fftSize = 1024;
     final fft = aubioProcessor.processFFTChunk(float32Buffer, fftSize);
-    final dominantFreq = aubioProcessor.findDominantFrequency(fft, 44100, fftSize);
+    final dominantFreq = aubioProcessor.findDominantFrequency(fft, 16000, fftSize);
 
-    // Additional musical analysis
     final midiNote = aubioProcessor.freqToMidi(pitchValue);
-    final noteName = aubioProcessor.midiToNoteName(midiNote);
-    final cents = aubioProcessor.freqToCents(pitchValue, baseFrequency);
+    PitchResult processedPitch = aubioProcessor.handlePitch(pitchValue);
 
     setState(() {
       pitchResult = "Pitch: ${pitchValue.toStringAsFixed(2)} Hz";
       fftResult = "FFT Dominant: ${dominantFreq.toStringAsFixed(2)} Hz";
-      noteResult = "Note: $noteName";
-      midiResult = "MIDI: ${midiNote.toStringAsFixed(2)}";
-      centsResult = "Cents from A4: ${cents.toStringAsFixed(2)}";
+      noteResult = "Note: ${processedPitch.note}";
+      midiResult = "MIDI: ${processedPitch.midiNote}";
+      centsResult = "Cents with ref note: ${processedPitch.diffCents.toStringAsFixed(2)}";
       audioSamples.addAll(samples);
     });
   }
