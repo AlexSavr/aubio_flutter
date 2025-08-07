@@ -234,8 +234,9 @@ Converts a frequency into musical note information including note name, MIDI num
 
 ### Example usage
 ```dart
+final processor = AubioProcessor();
 // Check tuning of 442 Hz against standard A440
-final pitchAnalysis = handlePitch(442.0);
+final pitchAnalysis = processor.handlePitch(442.0);
 
 print('Note: ${pitchAnalysis.noteLiteral}'); // "A4"
 print('Deviation: ${pitchAnalysis.diffCents.toStringAsFixed(2)} cents'); // "7.85 cents"
