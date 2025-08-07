@@ -7,15 +7,20 @@ project(aubio_flutter_library VERSION 0.0.1 LANGUAGES C)
 
 add_library(aubio STATIC
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/aubio.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/types.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/fvec.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/fvec.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/aubio_priv.h
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/cvec.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/cvec.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/fmat.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/fmat.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/fvec.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/fvec.h
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/lvec.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/lvec.h
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/mathutils.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/mathutils.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/musicutils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/musicutils.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/types.h
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/vecutils.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/vecutils.h
 
@@ -30,15 +35,31 @@ add_library(aubio STATIC
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/temporal/c_weighting.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/temporal/c_weighting.h
 
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/awhitening.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/awhitening.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/dct.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/dct.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/dct_accelerate.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/dct_fftw.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/dct_ipp.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/dct_ooura.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/dct_plain.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/fft.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/fft.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/filterbank.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/filterbank.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/filterbank_mel.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/filterbank_mel.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/mfcc.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/mfcc.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/ooura_fft8g.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/phasevoc.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/phasevoc.h
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/specdesc.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/specdesc.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/awhitening.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/awhitening.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/ooura_fft8g.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/statistics.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/tss.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/spectral/tss.h
 
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/pitch/pitch.c
         ${CMAKE_CURRENT_SOURCE_DIR}/aubio-c/pitch/pitch.h
